@@ -57,6 +57,10 @@ class Source(Base):
         self._tern_in_literal = \
             bool(vars.get('deoplete#sources#ternjs#in_literal', 1))
 
+        self._tern_arguments = '--persistent '
+        self._tern_arguments += vars.get('deoplete#sources#ternjs#tern_arguments', '')
+        self._command = ' '.join([self._tern_command, self._tern_arguments])
+
         # Call to vim/nvim on init to do async the source
         self._vim_current_path = self.vim.eval("expand('%:p:h')")
         self._vim_current_cwd = self.vim.eval('getcwd()')
@@ -167,7 +171,7 @@ class Source(Base):
             env['PATH'] += ':/usr/local/bin'
 
         self._proc = subprocess.Popen(
-            [self._tern_command, '--persistent'],
+            self._command,
             cwd=self._project_directory,
             shell=is_window,
             env=env,

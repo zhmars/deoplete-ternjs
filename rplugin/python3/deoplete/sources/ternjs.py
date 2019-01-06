@@ -59,7 +59,9 @@ class Source(Base):
 
         self._tern_arguments = '--persistent '
         self._tern_arguments += vars.get('deoplete#sources#ternjs#tern_arguments', '')
-        self._command = ' '.join([self._tern_command, self._tern_arguments])
+        self._command = [self._tern_command]
+        for i in self._tern_arguments.split():
+            self._command.append(i)
 
         # Call to vim/nvim on init to do async the source
         self._vim_current_path = self.vim.eval("expand('%:p:h')")
